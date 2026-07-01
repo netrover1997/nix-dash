@@ -4,9 +4,6 @@
 {
 	home.username = "netrover";
 	home.homeDirectory = "/home/netrover";
-	home.packages = with pkgs; [
-		gh
-	];
 	programs.git = {
 		enable = true;
 		settings = {
@@ -14,11 +11,7 @@
 		name = "netrover1997";
 		email = "netrover1997@gmail.com";
 			};
-		credential = {
-			"https://github.com" = {
-				helper = "!f() { gh auth token; }; f ";
 				};
-			};
 		};
 	};
 
