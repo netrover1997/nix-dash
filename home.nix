@@ -16,7 +16,7 @@
 			};
 		credential = {
 			"https://github.com" = {
-				helper = "!gh auth token";
+				helper = "!f() { gh auth token; }; f ";
 				};
 			};
 		};
