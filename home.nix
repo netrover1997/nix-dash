@@ -11,7 +11,9 @@
 		name = "netrover1997";
 		email = "netrover1997@gmail.com";
 			};
-				};
+		credential = {
+				helper = "store";
+			};	
 		};
 	};
 
