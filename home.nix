@@ -4,6 +4,11 @@
 {
 	home.username = "netrover";
 	home.homeDirectory = "/home/netrover";
+	
+	home.packages = with pkgs; [
+		brightnessctl
+		];
+
 	programs.git = {
 		enable = true;
 		settings = {
@@ -24,4 +29,6 @@
 			btw = "echo I use nixos, btw";
 		};
 	};
+	home.file.".config/hypr".source = ./config/hypr;	
+                   
 }
