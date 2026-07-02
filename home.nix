@@ -18,6 +18,7 @@
 		waybar
 		mako
 		fuzzel
+		quickshell
 	];
 
 	services.hyprpolkitagent.enable = true;
@@ -40,6 +41,7 @@
 		enable = true;
 		shellAliases = {
 			btw = "echo I use nixos, btw";
+			rs = "cd ~/nix-dash && git add . && sudo nixos-rebuild switch --flake .#nixos-btw";
 		};
 	};
 	home.file.".config/hypr".source = ./config/hypr;	

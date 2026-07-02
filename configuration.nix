@@ -65,6 +65,12 @@
   # ---------- ASUS hardware ----------
   services.asusd.enable = true;
 
+# Create required directories for asusd systemd sandboxing
+  systemd.tmpfiles.rules = [
+    "d /etc/asusd 0755 root root -"
+    "d /var/lib/asusd 0755 root root -"
+  ];
+
   # ---------- Audio ----------
   security.rtkit.enable = true;
   services.pipewire = {
@@ -123,6 +129,9 @@
     pciutils # lspci
     usbutils # lsusb
     btop
+    emacs
+    ripgrep
+    fd
   ];
 
   fonts.packages = with pkgs; [
