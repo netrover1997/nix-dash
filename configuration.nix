@@ -80,7 +80,7 @@
   services.blueman.enable = true;
 
   # ---------- Power / thermal / storage ----------
-  services.tlp.enable = true;
+  services.power-profiles-daemon.enable = true;
   services.thermald.enable = true; # Intel CPU thermal management
   services.fstrim.enable = true;
   zramSwap.enable = true;
@@ -128,7 +128,7 @@
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     noto-fonts
-    noto-fonts-emoji
+    noto-fonts-color-emoji
   ];
 
   # ---------- Nix housekeeping ----------
