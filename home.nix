@@ -33,6 +33,8 @@
 		doomDir = ./config/doom;
 		# Uncomment if you hit "Cannot find Git revision" errors on newer Nix:
 		# experimentalFetchTree = true;
+
+		emacs = pkgs.emacs30-pgtk;
 	};
 
 	# Run Emacs as a daemon (Unstraightened auto-registers itself as
@@ -62,6 +64,8 @@
 		shellAliases = {
 			btw = "echo I use nixos, btw";
 			rs = "cd ~/nix-dash && git add . && sudo nixos-rebuild switch --flake .#nixos-btw";
+			e = "emacsclient -t -a ''";                         # Instant Terminal Client
+   		ec = "emacsclient -c -n -a ''";                         # Quick-fix Client
 		};
 	};
 	home.file.".config/hypr".source = ./config/hypr;	
