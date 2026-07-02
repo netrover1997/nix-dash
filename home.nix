@@ -4,10 +4,23 @@
 {
 	home.username = "netrover";
 	home.homeDirectory = "/home/netrover";
-	
+
 	home.packages = with pkgs; [
+		# hardware control
 		brightnessctl
-		];
+
+		# Wayland/Hyprland session essentials
+		wl-clipboard
+		grim
+		slurp
+		hypridle
+		hyprlock
+		waybar
+		mako
+		fuzzel
+	];
+
+	services.hyprpolkitagent.enable = true;
 
 	programs.git = {
 		enable = true;
