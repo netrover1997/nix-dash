@@ -129,7 +129,6 @@
     pciutils # lspci
     usbutils # lsusb
     btop
-    emacs
     ripgrep
     fd
   ];

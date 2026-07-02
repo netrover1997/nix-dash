@@ -1,7 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 
 {
+	imports = [ inputs.nix-doom-emacs-unstraightened.homeModule ];
+
 	home.username = "netrover";
 	home.homeDirectory = "/home/netrover";
 
@@ -22,6 +24,24 @@
 	];
 
 	services.hyprpolkitagent.enable = true;
+
+	# Doom Emacs, built by nix-doom-emacs-unstraightened.
+	# doomDir tracks ./config/doom in this repo, so `doom sync` never has to
+	# run by hand -- `rs` (nixos-rebuild switch) rebuilds it for you.
+	programs.doom-emacs = {
+		enable = true;
+		doomDir = ./config/doom;
+		# Uncomment if you hit "Cannot find Git revision" errors on newer Nix:
+		# experimentalFetchTree = true;
+	};
+
+	# Run Emacs as a daemon (Unstraightened auto-registers itself as
+	# services.emacs.package) and talk to it with `emacsclient`. Without
+	# this, cold Doom startup can take the better part of a minute.
+	services.emacs = {
+		enable = true;
+		client.enable = true;
+	};
 
 	programs.git = {
 		enable = true;
