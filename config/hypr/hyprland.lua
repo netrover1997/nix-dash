@@ -42,7 +42,7 @@ hl.monitor({
 -- Set programs that you use
 local terminal    = "kitty"
 local fileManager = "dolphin"
-local menu        = "hyprlauncher"
+local menu        = "fuzzel" -- was "hyprlauncher" -- that binary isn't installed anywhere in home.nix, fuzzel is
 
 
 -------------------
@@ -50,25 +50,31 @@ local menu        = "hyprlauncher"
 -------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Autostart/
-
--- Autostart necessary processes (like notifications daemons, status bars, etc.)
--- Or execute your favorite apps at launch like this:
 --
--- hl.on("hyprland.start", function () 
---   hl.exec_cmd(terminal)
---   hl.exec_cmd("nm-applet")
---   hl.exec_cmd("waybar & hyprpaper & firefox")
--- end)
+-- uwsm-managed session: everything here is launched through `uwsm app --`
+-- so each process lands in its own transient systemd scope under
+-- app-graphical.slice, rather than running as a raw child of the Hyprland
+-- process itself (which is what plain hl.exec_cmd("waybar") would do).
+-- See: https://wiki.hypr.land/Useful-Utilities/Systemd-start/
+hl.on("hyprland.start", function ()
+    hl.exec_cmd("uwsm app -- waybar")
+    hl.exec_cmd("uwsm app -- mako")
+    hl.exec_cmd("uwsm app -- hypridle")
+end)
 
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
 -------------------------------
 
--- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
-
-hl.env("XCURSOR_SIZE", "24")
-hl.env("HYPRCURSOR_SIZE", "24")
+-- uwsm-managed session: do NOT set env vars with hl.env() here. uwsm sources
+-- its env files at the graphical-session-pre.target stage, before the
+-- compositor unit is even started, so hl.env() calls in this file would just
+-- be redundant with (or fought over by) those files. Instead:
+--   config/uwsm/env            -> theming/xcursor/toolkit vars (XCURSOR_SIZE)
+--   config/uwsm/env-hyprland   -> HYPR*/AQ_* vars (HYPRCURSOR_SIZE)
+-- Both are symlinked into ~/.config/uwsm/ by home.nix already.
+-- See: https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 
 -----------------------
@@ -266,13 +272,20 @@ hl.device({
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
-hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
+--
+-- uwsm-managed session: app-launching binds go through `uwsm app --` for the
+-- same scoping reason as the autostart block above.
+hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("uwsm app -- " .. terminal))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("emacsclient -c -a ''"))
+-- Never exit via hl.dsp.exit() or by killing Hyprland directly under uwsm --
+-- that yanks the compositor out from under uwsm's unit tracking and skips
+-- its ordered shutdown of every app scope. `uwsm stop` is the correct way
+-- to end the session. See: https://wiki.archlinux.org/title/Hyprland#uwsm
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("uwsm stop"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("uwsm app -- emacsclient -c -a ''"))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("uwsm app -- " .. menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
@@ -302,7 +315,10 @@ hl.bind(mainMod .. " + mouse_up",   hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(),   { mouse = true })
 hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
--- Laptop multimedia keys for volume and LCD brightness
+-- Laptop multimedia keys for volume and LCD brightness.
+-- Not wrapped in `uwsm app --`: these are one-shot CLI calls that exit
+-- immediately (not long-running apps), so a systemd scope per keypress is
+-- pure overhead -- noticeable on repeating binds like volume/brightness.
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),      { locked = true, repeating = true })
 hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),     { locked = true, repeating = true })

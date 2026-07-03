@@ -1,0 +1,7 @@
+# Sourced by uwsm ONLY for the Hyprland session (filename matches the
+# lowercased XDG_CURRENT_DESKTOP entry: "Hyprland" -> "env-hyprland").
+# Put HYPR* and AQ_* vars here.
+# Format: export KEY=VALUE, one per line.
+# See: https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
+
+export HYPRCURSOR_SIZE=24

@@ -1,0 +1,6 @@
+# Sourced by uwsm for EVERY graphical session it manages (not just Hyprland).
+# Put theming, xcursor, and generic toolkit vars here.
+# Format: export KEY=VALUE, one per line.
+# See: https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
+
+export XCURSOR_SIZE=24
