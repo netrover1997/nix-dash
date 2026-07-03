@@ -69,5 +69,6 @@
 		};
 	};
 	home.file.".config/hypr".source = ./config/hypr;	
-                   
+  home.file.".config/doom".source = ./config/doom;
+  home.file.".config/uwsm".source = ./config/uwsm;                 
 }

@@ -21,6 +21,9 @@
   boot.kernelParams = [
     "acpi_backlight=native" # lets nvidia_wmi_ec_backlight control the panel (Ultimate/dGPU MUX mode)
   ];
+
+  boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
+  
   boot.tmp.cleanOnBoot = true;
 
   networking.hostName = "nixos-btw";
@@ -95,16 +98,15 @@
   security.polkit.enable = true; # off by default; needed for GUI privilege prompts
   xdg.portal = {
     enable = true;
-    extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+    extraPortals = with pkgs; [ xdg-desktop-portal-gtk
+                                xdg-desktop-portal-hyprland
+                              ];
   };
   programs.dconf.enable = true; # GTK app settings (theming, file pickers)
 
   services.fwupd.enable = true; # firmware updates
 
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1"; # native Wayland for Electron apps
-  };
-
+  
   # ---------- User ----------
   users.users.netrover = {
     isNormalUser = true;
@@ -131,6 +133,7 @@
     btop
     ripgrep
     fd
+    nvtopPackages.nvidia
   ];
 
   fonts.packages = with pkgs; [
