@@ -1,0 +1,26 @@
+{
+  "base_keymap": "Emacs",
+  "theme": "One Dark",
+  "ui_font_size": 15,
+  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
+  "buffer_font_size": 14,
+  "line_numbers": true,
+  "soft_wrap": "editor_width",
+  
+  // Theme Overrides targeting the default 'One Dark' theme
+  "theme_overrides": {
+    "One Dark": {
+      "editor.background": "#000000",
+      "editor.gutter.background": "#000000",
+      "editor.active_line.background": "#0a0a0a",
+      "panel.background": "#000000",
+      "terminal.background": "#000000",
+      "tab_bar.background": "#000000",
+      "active_tab.background": "#000000",
+      "inactive_tab.background": "#000000",
+      "toolbar.background": "#000000",
+      "status_bar.background": "#000000",
+      "title_bar.background": "#000000"
+    }
+  }
+}

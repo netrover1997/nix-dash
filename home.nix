@@ -21,6 +21,21 @@
 		mako
 		fuzzel
 		quickshell
+		zed-editor
+        antigravity
+    # tools lsp
+    nodejs
+    gcc
+    pandoc
+    nixfmt-rfc-style
+    shellcheck
+    python3
+    python3Packages.isort
+    python3Packages.pytest
+    pipenv
+    steam
+    steam-tui
+    mindustry-wayland
 	];
 
 	services.hyprpolkitagent.enable = true;
@@ -54,7 +69,7 @@
 			};
 		credential = {
 				helper = "store";
-			};	
+			};
 		};
 	};
 
@@ -68,7 +83,7 @@
    		ec = "emacsclient -c -n -a ''";                         # Quick-fix Client
 		};
 	};
-	home.file.".config/hypr".source = ./config/hypr;	
-  home.file.".config/doom".source = ./config/doom;
-  home.file.".config/uwsm".source = ./config/uwsm;                 
+	home.file.".config/hypr".source = ./config/hypr;
+  home.file.".config/uwsm".source = ./config/uwsm;
+  home.file.".config/zed".source = ./config/zed;
 }

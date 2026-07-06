@@ -17,7 +17,7 @@
        workspaces
 
        :editor
-       (evil +everywhere)
+      ; (evil +everywhere)
        file-templates
        fold
        snippets
@@ -35,13 +35,17 @@
        (eval +overlay)
        lookup
        magit
-
+       tree-sitter
+       lsp
        :lang
        emacs-lisp
        markdown
        (nix +tree-sitter)
        (sh +fish)
        yaml
-
+       (lua +tree-sitter)
+       (python +lsp +tree-sitter)
+       (qml +lsp)
+       
        :config
        (default +bindings +smartparens))
