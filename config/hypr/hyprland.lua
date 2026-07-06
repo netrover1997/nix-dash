@@ -29,7 +29,7 @@ hl.monitor({
     scale    = "1",
 })
 hl.monitor({
-    output   = "eDP-1",
+    output   = "HDMI-A-1",
     mode     = "1920x1080@60",
     position = "auto",
     scale    = "1",
@@ -57,7 +57,7 @@ local menu        = "fuzzel" -- was "hyprlauncher" -- that binary isn't installe
 -- process itself (which is what plain hl.exec_cmd("waybar") would do).
 -- See: https://wiki.hypr.land/Useful-Utilities/Systemd-start/
 hl.on("hyprland.start", function ()
-    hl.exec_cmd("uwsm app -- waybar")
+   -- hl.exec_cmd("uwsm app -- waybar")
     hl.exec_cmd("uwsm app -- mako")
     hl.exec_cmd("uwsm app -- hypridle")
 end)
@@ -109,8 +109,8 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            ["active_border"] = "rgba(ffffffff)",
+            ["inactive_border"] = "rgba(444444ff)", 
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
@@ -123,22 +123,22 @@ hl.config({
     },
 
     decoration = {
-        rounding       = 10,
-        rounding_power = 2,
+        rounding       = 0,
+        rounding_power = 0,
 
         -- Change transparency of focused and unfocused windows
         active_opacity   = 1.0,
         inactive_opacity = 1.0,
 
         shadow = {
-            enabled      = true,
+            enabled      = false,
             range        = 4,
             render_power = 3,
             color        = 0xee1a1a1a,
         },
 
         blur = {
-            enabled   = true,
+            enabled   = false,
             size      = 3,
             passes    = 1,
             vibrancy  = 0.1696,
@@ -223,8 +223,10 @@ hl.config({
 
 hl.config({
     misc = {
-        force_default_wallpaper = -1,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo   = false, -- If true disables the random hyprland logo / anime girl background. :(
+     force_default_wallpaper = 0,       -- Disables the default anime mascot wallpapers
+        disable_hyprland_logo = true,      -- Disables the high-contrast Hyprland logo
+        disable_splash_rendering = true,   -- Disables splash text rendering at startup
+        background_color = "rgb(000000)",  -- Sets the compositor's raw background to absolute black   
     },
 })
 
@@ -279,6 +281,7 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 -- uwsm-managed session: app-launching binds go through `uwsm app --` for the
 -- same scoping reason as the autostart block above.
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("uwsm app -- " .. terminal))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("uwsm app -- evince '/home/netrover/python-crash-course/python_crash_course/python_crash.pdf'"))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 -- Never exit via hl.dsp.exit() or by killing Hyprland directly under uwsm --

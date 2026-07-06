@@ -36,6 +36,10 @@
     steam
     steam-tui
     mindustry-wayland
+    discord
+    discordo
+    chromium
+    evince
 	];
 
 	services.hyprpolkitagent.enable = true;

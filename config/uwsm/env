@@ -4,3 +4,10 @@
 # See: https://wiki.hypr.land/Configuring/Advanced-and-Cool/Environment-variables/
 
 export XCURSOR_SIZE=24
+# Force Wayland natively for Electron apps
+export NIXOS_OZONE_WL=1
+# Hardware acceleration for NVIDIA
+export LIBVA_DRIVER_NAME=nvidia
+export __GLX_VENDOR_LIBRARY_NAME=nvidia
+export GTK_THEME=Adwaita:dark
+export gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'

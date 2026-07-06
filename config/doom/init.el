@@ -15,7 +15,7 @@
        vi-tilde-fringe
        window-select
        workspaces
-
+       
        :editor
       ; (evil +everywhere)
        file-templates
@@ -37,6 +37,8 @@
        magit
        tree-sitter
        lsp
+       pdf
+       
        :lang
        emacs-lisp
        markdown
