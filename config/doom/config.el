@@ -96,9 +96,9 @@
 ;; 1. Use bash for internal Emacs processes (prevents Fish-related breakages)
 (setq shell-file-name (executable-find "bash"))
 
-;; 2. Use Fish for interactive terminals (vterm, etc.)
-(setq-default vterm-shell "/usr/bin/fish")
-(setq-default explicit-shell-file-name "/usr/bin/fish")
+;; 2. Shell for interactive terminals (vterm, etc.) - avoids hardcoded /usr/bin on NixOS
+(setq-default vterm-shell (or (executable-find "fish") (executable-find "bash")))
+(setq-default explicit-shell-file-name (or (executable-find "fish") (executable-find "bash")))
 
 ;; 3. Ensure pyenv is respected inside Emacs
 (setq nrepl-python-command "python") ; helpful for some python modules

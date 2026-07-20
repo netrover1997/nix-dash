@@ -38,7 +38,9 @@
        tree-sitter
        lsp
        pdf
-       
+       direnv
+       :term
+       vterm
        :lang
        emacs-lisp
        markdown

@@ -90,7 +90,7 @@
 
   # ---------- Power / thermal / storage ----------
   services.power-profiles-daemon.enable = true;
-  services.thermald.enable = true; # Intel CPU thermal management
+
   services.fstrim.enable = true;
   zramSwap.enable = true;
 
@@ -118,6 +118,8 @@
 
   programs.firefox.enable = true;
 
+  services.flatpak.enable = true;
+  
   # ---------- System packages ----------
   environment.systemPackages = with pkgs; [
     vim

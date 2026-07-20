@@ -39,7 +39,13 @@
     discord
     discordo
     chromium
-    evince
+      evince
+      webtorrent_desktop
+      vlc
+      mpv
+      spotify
+      easyeffects
+      pavucontrol
 	];
 
 	services.hyprpolkitagent.enable = true;
@@ -79,7 +85,8 @@
 
 	home.stateVersion = "26.05";
 	programs.bash = {
-		enable = true;
+	  enable = true;
+      enableCompletion = true;
 		shellAliases = {
 			btw = "echo I use nixos, btw";
 			rs = "cd ~/nix-dash && git add . && sudo nixos-rebuild switch --flake .#nixos-btw";
@@ -87,6 +94,21 @@
    		ec = "emacsclient -c -n -a ''";                         # Quick-fix Client
 		};
 	};
+    programs.fzf = {
+      enable = true;
+      enableBashIntegration = true;
+    };
+    programs.zoxide = {
+      enable = true;
+      enableBashIntegration = true;
+      options = [ "--cmd cd" ];
+    };
+
+    programs.direnv = {
+      enable = true;
+      enableBashIntegration = true;
+      nix-direnv.enable = true;
+    };
 	home.file.".config/hypr".source = ./config/hypr;
   home.file.".config/uwsm".source = ./config/uwsm;
   home.file.".config/zed".source = ./config/zed;

@@ -40,7 +40,7 @@ hl.monitor({
 ---------------------
 
 -- Set programs that you use
-local terminal    = "kitty"
+local terminal    = "foot"
 local fileManager = "dolphin"
 local menu        = "fuzzel" -- was "hyprlauncher" -- that binary isn't installed anywhere in home.nix, fuzzel is
 
@@ -338,6 +338,16 @@ hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = tr
 hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+
+-- Toggle HDMI-A-1 display on/off
+-- hyprctl keyword doesn't work with Lua config; use hyprctl eval instead.
+hl.bind(mainMod .. " + SHIFT + D", hl.dsp.exec_cmd(
+    "if hyprctl monitors | grep -q 'Monitor HDMI-A-1'; then "
+    .. "hyprctl eval 'hl.monitor({ output = \"HDMI-A-1\", disabled = true })'; "
+    .. "else "
+    .. "hyprctl eval 'hl.monitor({ output = \"HDMI-A-1\", disabled = false, mode = \"1920x1080@60\", position = \"auto\", scale = \"1\" })'; "
+    .. "fi"
+))
 
 
 --------------------------------
