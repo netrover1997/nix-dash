@@ -117,7 +117,7 @@ hl.config({
         resize_on_border = false,
 
         -- Please see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/ before you turn this on
-        allow_tearing = false,
+        allow_tearing = true,
 
         layout = "dwindle",
     },
@@ -250,8 +250,12 @@ hl.config({
 
         sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 
+        accel_profile = "flat",   -- Forces a linear 1:1 pointer curve (no acceleration)
+        force_no_accel = true,    -- Bypasses all libinput pointer acceleration filters
+        
         touchpad = {
             natural_scroll = false,
+            
         },
     },
 })
@@ -280,6 +284,9 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 --
 -- uwsm-managed session: app-launching binds go through `uwsm app --` for the
 -- same scoping reason as the autostart block above.
+hl.bind(mainMod .. " + S", hl.dsp.exec_cmd("uwsm app -- " .. terminal .. " -e yazi"))
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen(0))
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("uwsm app -- chromium"))
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd("uwsm app -- " .. terminal))
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("uwsm app -- evince '/home/netrover/python-crash-course/python_crash_course/python_crash.pdf'"))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
@@ -290,17 +297,18 @@ local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- to end the session. See: https://wiki.archlinux.org/title/Hyprland#uwsm
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("uwsm stop"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("emacsclient -c -a ''"))
+hl.bind(mainMod .. " + ALT + P", hl.dsp.exec_cmd("/home/netrover/nix-dash/scripts/open-pcc.sh"))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd("uwsm app -- " .. menu))
 hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("grim -g \"$(slurp)\" - | wl-copy"))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
-hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
 -- Move focus with mainMod + arrow keys
-hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + H",  hl.dsp.focus({ direction = "left" }))
+hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "right" }))
+hl.bind(mainMod .. " + K",    hl.dsp.focus({ direction = "up" }))
+hl.bind(mainMod .. " + L",  hl.dsp.focus({ direction = "down" }))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
@@ -398,4 +406,16 @@ hl.window_rule({
 
     move  = "20 monitor_h-120",
     float = true,
+})
+
+hl.window_rule({
+    name = "dota2-tearing",
+    match = { class = "dota2" },
+    immediate = true,
+})
+
+hl.window_rule({
+    name = "bf4-tearing",
+    match = { class = "^bf4%.exe$" },
+    immediate = true,
 })

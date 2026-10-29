@@ -20,6 +20,9 @@
   boot.kernelPackages = pkgs.linuxPackages_latest; # newer kernel = better asus-wmi/ACPI + Nvidia support
   boot.kernelParams = [
     "acpi_backlight=native" # lets nvidia_wmi_ec_backlight control the panel (Ultimate/dGPU MUX mode)
+    "nvidia-drm.modeset=1" 
+    "nvidia-drm.fbdev=1"
+    "snd_hda_intel.power_save=0"
   ];
 
   boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
@@ -39,6 +42,8 @@
     xwayland.enable = true;
   };
 
+programs.gamescope.enable = true;
+  
   services.xserver = {
     enable = true;
     autoRepeatDelay = 200;
@@ -46,7 +51,9 @@
     windowManager.qtile.enable = true;
   };
   services.displayManager.ly.enable = true;
-
+  
+  hardware.openrazer.enable = true;
+  
   # ---------- Graphics: Nvidia ----------
   # Ultimate/dGPU MUX mode: panel is wired directly to the Nvidia GPU, iGPU is
   # bypassed entirely. No PRIME/offload block — that's only for hybrid mode.
@@ -74,6 +81,8 @@
     "d /var/lib/asusd 0755 root root -"
   ];
 
+  hardware.enableAllFirmware = true;
+  
   # ---------- Audio ----------
   security.rtkit.enable = true;
   services.pipewire = {
@@ -81,8 +90,12 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
   };
 
+  services.printing.enable = true;
+  services.printing.drivers = [ pkgs.hplipWithPlugin ];
+  
   # ---------- Bluetooth ----------
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
@@ -110,18 +123,41 @@
   # ---------- User ----------
   users.users.netrover = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # sudo
+    extraGroups = [ "wheel" "video" "openrazer" ]; # sudo + direct hw access for capture
     packages = with pkgs; [
       tree
     ];
   };
 
+  # ---------- Gaming / Steam ----------
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; 
+    dedicatedServer.openFirewall = true; 
+  };
+
+  programs.gamemode.enable = true;
+  
   programs.firefox.enable = true;
 
   services.flatpak.enable = true;
+
+  # ---------- File Manager & Thumbnails ----------
+programs.thunar = {
+  enable = true;
+  plugins = with pkgs; [
+    thunar-archive-plugin # Zip / Tar extraction
+    thunar-volman         # USB drive auto-mounting
+        ];
+};
+  
+
+  services.tumbler.enable = true; # Generates image/video thumbnails
   
   # ---------- System packages ----------
   environment.systemPackages = with pkgs; [
+    micro
+    vis
     vim
     wget
     git
@@ -135,9 +171,30 @@
     btop
     ripgrep
     fd
+    polychromatic
+    steam-tui
+    steamcmd
+    steam-run
     nvtopPackages.nvidia
+    
+    # --- WINE & WINETRICKS SUPPORT ---
+    wineWow64Packages.staging # Full 32/64-bit Wine with staging fixes
+    winetricks             # System-native winetricks (bypasses Proton loops)
+    protontricks           # Tool to manage dependencies in Proton prefixe
+    
+    (lutris.override {
+      extraPkgs = pkgs: [
+        gamescope
+        winetricks
+        wineWow64Packages.staging
+        gnutls             # Fixes libgiognutls.so missing symbol error
+        glib               # Fixes g_source_set_static_name symbol errors
+        dconf              # Fixes libdconfsettings.so error
+      ];
+    })
+    obs-studio-plugins.obs-vkcapture  # Vulkan capture layer (game-side hook for OBS)
+    mangohud
   ];
-
   fonts.packages = with pkgs; [
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only

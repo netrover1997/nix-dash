@@ -137,3 +137,7 @@
 (after! vterm
   (custom-set-faces!
     '(vterm-color-black :background "#000000")))
+
+;; Disable Doom Dashboard from automatically opening on startup and new frames
+(setq doom-fallback-buffer-name "*scratch*")
+(setq initial-buffer-choice (lambda () (vterm)))

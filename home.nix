@@ -27,14 +27,9 @@
     nodejs
     gcc
     pandoc
-    nixfmt-rfc-style
+    nixfmt
     shellcheck
-    python3
-    python3Packages.isort
-    python3Packages.pytest
-    pipenv
-    steam
-    steam-tui
+    python3    
     mindustry-wayland
     discord
     discordo
@@ -46,8 +41,19 @@
       spotify
       easyeffects
       pavucontrol
+      furnace
+      qbittorrent
+      protonup-qt
+      unrar
+      p7zip
+      xarchiver
+      qimgv
+      loupe
+      megasync
+      aider-chat
 	];
 
+    
 	services.hyprpolkitagent.enable = true;
 
 	# Doom Emacs, built by nix-doom-emacs-unstraightened.
@@ -70,6 +76,11 @@
 		client.enable = true;
 	};
 
+    programs.yazi = {
+        enable = true;
+        enableBashIntegration = true; # integrations for your bash setup
+    };
+    
 	programs.git = {
 		enable = true;
 		settings = {
@@ -87,11 +98,20 @@
 	programs.bash = {
 	  enable = true;
       enableCompletion = true;
+
+# 1. This securely loads your API key from a local hidden file instead of hardcoding it
+      initExtra = ''
+        if [ -f ~/.gemini_api_key ]; then
+          export GEMINI_API_KEY=$(cat ~/.gemini_api_key)
+        fi
+      '';
+
 		shellAliases = {
 			btw = "echo I use nixos, btw";
 			rs = "cd ~/nix-dash && git add . && sudo nixos-rebuild switch --flake .#nixos-btw";
 			e = "emacsclient -t -a ''";                         # Instant Terminal Client
    		ec = "emacsclient -c -n -a ''";                         # Quick-fix Client
+	aider-gemini = "aider --model gemini/gemini-pro-latest";
 		};
 	};
     programs.fzf = {
@@ -108,6 +128,16 @@
       enable = true;
       enableBashIntegration = true;
       nix-direnv.enable = true;
+    };
+
+    # ---------- OBS Studio (streaming) ----------
+    programs.obs-studio = {
+      enable = true;
+      package = pkgs.obs-studio; 
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-vkcapture              # Game capture on Wayland (Vulkan/OpenGL hook)
+        obs-pipewire-audio-capture # Capture game/desktop audio via PipeWire
+      ];
     };
 	home.file.".config/hypr".source = ./config/hypr;
   home.file.".config/uwsm".source = ./config/uwsm;
